@@ -1,4 +1,8 @@
-﻿#include <iostream>
+﻿#define _CRT_SECURE_NO_WARNINGS       // 先生のコードをコピーしたらエラーが出ました。
+
+#include <iostream>
+#include <cstdlib>
+#include <cstring>
 using namespace std;
 
 enum Status
@@ -18,9 +22,12 @@ class Enemy
 public:
 	Enemy();
 	~Enemy();
-	void Attack(Hero* hero);
-	int EnemyGetStatus(int status);
-	void EnemySetHp(int changeInHp);
+	void Attack(Hero* hero);              // 1 ダメージの修正
+	int GetStatus(int status);            // 2 関数名の変更   // 3 return case:Name の修正
+	void SetHp(int changeInHp);           // 2 関数名の変更
+
+private:
+	int NameShow();                       // 3 case:Nameで呼ばれる関数の追加
 
 private:
 	const char* name;
@@ -34,23 +41,23 @@ class Hero
 public:
 	Hero();
 	~Hero();
-	void Attack(Enemy* enemy);
+	void Attack(Enemy* enemy);           // 1 ダメージの修正
 	void Heal();
-	int HeroGetStatus(int status);
-	void HeroSetHp(int changeInHp);
+	int GetStatus(int status);           // 2 関数名の変更 // 3 return case:Name の修正
+	void SetHp(int changeInHp);          // 2 関数名の変更
 	int InputKey();
 
 
 private:
-	void InputName(int &nameSize);
-	int CharArrayCheckSize(const char* array);
+	void InputName();
+	int ShowName();                      // 3 case:Nameで呼ばれる関数の追加
+
 
 private:
 	char* name;
 	int hp;
 	int atk;
 	int def;
-	int nameSize;
 
 
 };
@@ -68,14 +75,21 @@ Enemy::Enemy()
 
 void Enemy::Attack(Hero* hero)
 {
-	cout << name << "の攻撃" << endl;
-	hero->HeroGetStatus(Name);
-	cout << "に " << abs(hero->HeroGetStatus(Def) - atk) << " のダメージ" << endl;
+	int damage = hero->GetStatus(Def) - atk;        //1 ダメージ変数の追加
 
-	hero->HeroSetHp(hero->HeroGetStatus(Def) - atk);
+	if (damage > 0)                                 //1 修正
+	{
+		damage = 0;                                 //1 damageがマイナスの値でなければ0を入れる
+	}
+
+	cout << name << "の攻撃" << endl;
+	hero->GetStatus(Name);
+	cout << "に " << abs(damage) << " のダメージ" << endl;
+	
+	hero->SetHp(damage);
 }
 
-int Enemy::EnemyGetStatus(int status)
+int Enemy::GetStatus(int status)
 {
 	switch (status)
 	{
@@ -92,7 +106,7 @@ int Enemy::EnemyGetStatus(int status)
 		break;
 
 	case Name:
-		cout << name;
+		NameShow();                     //3 関数の追加
 		break;
 
 	default:
@@ -100,9 +114,15 @@ int Enemy::EnemyGetStatus(int status)
 	}
 }
 
-void Enemy::EnemySetHp(int changeInHp)
+void Enemy::SetHp(int changeInHp)
 {
 	hp += changeInHp;
+}
+
+int Enemy::NameShow()
+{
+	cout << name;
+	return 0;
 }
 
 Enemy::~Enemy()
@@ -115,7 +135,7 @@ Enemy::~Enemy()
 //プレイヤーの定義
 Hero::Hero()
 {
-	InputName(nameSize);
+	InputName();
 
 	cout << "HPを設定してください > " << flush;
 	cin >> hp;
@@ -126,23 +146,20 @@ Hero::Hero()
 
 void Hero::Attack(Enemy* enemy)
 {
-	cout << name << "の攻撃" << endl;
-	enemy->EnemyGetStatus(Name);
-	cout << "に " << abs(enemy->EnemyGetStatus(Def) - atk) << " のダメージ" << endl;
+	int damage = enemy->GetStatus(Def) - atk;          //1 ダメージ変数の追加
 
-	enemy->EnemySetHp(enemy->EnemyGetStatus(Def) - atk);
-}
-
-int Hero::CharArrayCheckSize(const char* array)
-{
-	int size = 1; //1の初期化は終端子記号（\0）の分
-
-	for (int i = 0; array[i] != '\0'; ++i)
+	if (damage > 0)                                    //1 修正
 	{
-		size++;
+		damage = 0;                                    //1 damageがマイナスの値でなければ0を入れる
 	}
-	return size;
+
+	cout << name << "の攻撃" << endl;
+	enemy->GetStatus(Name);
+	cout << "に " << abs(damage) << " のダメージ" << endl;
+
+	enemy->SetHp(damage); 
 }
+
 
 void Hero::Heal()
 {
@@ -152,7 +169,7 @@ void Hero::Heal()
 	hp += heal;
 }
 
-int Hero::HeroGetStatus(int status)
+int Hero::GetStatus(int status)
 {
 	switch (status)
 	{
@@ -169,7 +186,7 @@ int Hero::HeroGetStatus(int status)
 		break;
 
 	case Name:
-		cout << name;
+		ShowName();                   //3 関数の追加
 		break;
 
 	default:
@@ -177,30 +194,31 @@ int Hero::HeroGetStatus(int status)
 	}
 }
 
-void Hero::HeroSetHp(const int changeInHp)
+void Hero::SetHp(const int changeInHp)
 {
 	hp += changeInHp;
 }
 
-void Hero::InputName(int &nameSize)
+int Hero::ShowName()                                 //3 GetStatusで呼ぶ関数の追加
+{
+	cout << name;
+	return 0;
+}
+
+void Hero::InputName()
 {
 	const int MAX_NAME = 30;
 	char inputName[MAX_NAME + 1];
-
+	
 	cout << "名前を入力してください > " << flush;
 	cin >> inputName;
 
-	nameSize = CharArrayCheckSize(inputName);
-	name = new char[nameSize];
+	int size = strlen(inputName);                //4 strlenの使用に変更
+	name = new char[size + 1];
 
-	
-	for (int i = 0; i < nameSize; ++i)
-	{
-		name[i] = inputName[i];
-	}
+	strcpy(name, inputName);                     //4 strcpyの使用に変更
+
 	cout << "あなたの名前は " << name << " です。" << endl;
-
-
 }
 
 int Hero::InputKey()
@@ -216,12 +234,8 @@ int Hero::InputKey()
 
 Hero::~Hero()
 {
-	for (int i = 0; i < nameSize; ++i)
-	{
-		name[i] = NULL;
-	}
-
-	delete[] name;
+	delete[] name;      //5 解放はnewでとった値を解放するだけでポインタをdeleteするわけではないから先に開放を行う。
+	*name = NULL;       //5 修正
 };
 
 
@@ -229,15 +243,15 @@ void Battle(Hero* hero)
 {
 	Enemy enemy;
 
-	int heroNowHp = hero->HeroGetStatus(Hp);
-	int enemyNowHp = enemy.EnemyGetStatus(Hp);
+	int heroNowHp = hero->GetStatus(Hp);
+	int enemyNowHp = enemy.GetStatus(Hp);
 
 	while (true)
 	{
 		cout << endl;
-		hero->HeroGetStatus(Name);
+		hero->GetStatus(Name);
 		cout << " HP " << heroNowHp << endl;
-		enemy.EnemyGetStatus(Name);
+		enemy.GetStatus(Name);
 		cout << " HP " << enemyNowHp << endl;
 
 		int action = hero->InputKey();
@@ -245,7 +259,7 @@ void Battle(Hero* hero)
 		if (action == Atk)
 		{
 			hero->Attack(&enemy);
-			enemyNowHp = enemy.EnemyGetStatus(Hp);
+			enemyNowHp = enemy.GetStatus(Hp);
 		}
 		else if (action == Heal)
 		{
@@ -259,7 +273,7 @@ void Battle(Hero* hero)
 		}
 
 		enemy.Attack(hero);
-		heroNowHp = hero->HeroGetStatus(Hp);
+		heroNowHp = hero->GetStatus(Hp);
 
 		if (heroNowHp <= 0)
 		{
@@ -269,11 +283,10 @@ void Battle(Hero* hero)
 	}
 }
 
-
-
 int main()
 {
 	Hero hero;
 
 	Battle(&hero);
+
 }
