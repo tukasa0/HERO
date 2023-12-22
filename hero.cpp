@@ -1,4 +1,4 @@
-﻿#define _CRT_SECURE_NO_WARNINGS       // 先生のコードをコピーしたらエラーが出ました。
+﻿#define _CRT_SECURE_NO_WARNINGS
 
 #include <iostream>
 #include <cstdlib>
@@ -119,7 +119,7 @@ void Enemy::SetHp(int changeInHp)
 	hp += changeInHp;
 }
 
-int Enemy::NameShow()
+int Enemy::NameShow()                   //3 GetStatusで呼ぶ関数の追加
 {
 	cout << name;
 	return 0;
