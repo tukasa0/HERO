@@ -136,6 +136,8 @@ Enemy::~Enemy()
 Hero::Hero()
 {
 	InputName();
+	InputName();
+	InputName();
 
 	cout << "HPを設定してください > " << flush;
 	cin >> hp;
@@ -207,6 +209,12 @@ int Hero::ShowName()                                 // GetStatusで呼ぶ関数
 
 void Hero::InputName()
 {
+	if (name != NULL)                             // new二重防止コードの追加
+	{
+		delete[] name;
+		*name = NULL;
+	}
+
 	const int MAX_NAME = 30;
 	char inputName[MAX_NAME + 1];
 	
@@ -235,7 +243,7 @@ int Hero::InputKey()
 Hero::~Hero()
 {
 	delete[] name;      // 解放はnewでとった値を解放するだけでポインタをdeleteするわけではないから先に開放を行う。
-	*name = NULL;       // 修正
+	*name = NULL;        // 修正
 };
 
 
