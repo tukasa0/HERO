@@ -24,7 +24,7 @@ public:
 	void Attack(Hero* hero);              // ダメージの修正
 	int GetStatus(int status);            // 関数名の変更
 	void SetHp(int changeInHp);           // 関数名の変更
-	int ShowName();                       // publicに変更
+	void ShowName();                       // publicに変更
 
 private:
 	const char* name;
@@ -43,7 +43,7 @@ public:
 	int GetStatus(int status);           // 関数名の変更
 	void SetHp(int changeInHp);          // 関数名の変更
 	int InputKey();
-	int ShowName();                      // publicに変更
+	void ShowName();                      // publicに変更
 
 
 private:
@@ -113,10 +113,9 @@ void Enemy::SetHp(int changeInHp)
 	hp += changeInHp;
 }
 
-int Enemy::ShowName()
+void Enemy::ShowName()
 {
 	cout << name;
-	return 0;
 }
 
 Enemy::~Enemy()
@@ -130,8 +129,8 @@ Enemy::~Enemy()
 Hero::Hero()
 {
 	InputName();
-	InputName();
-	InputName();
+	//InputName();
+	//InputName();
 
 	cout << "HPを設定してください > " << flush;
 	cin >> hp;
@@ -191,10 +190,9 @@ void Hero::SetHp(const int changeInHp)
 	hp += changeInHp;
 }
 
-int Hero::ShowName()
+void Hero::ShowName()
 {
 	cout << name;
-	return 0;
 }
 
 void Hero::InputName()
