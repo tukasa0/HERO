@@ -22,12 +22,12 @@ class Enemy
 public:
 	Enemy();
 	~Enemy();
-	void Attack(Hero* hero);              // 1 ダメージの修正
-	int GetStatus(int status);            // 2 関数名の変更   // 3 return case:Name の修正
-	void SetHp(int changeInHp);           // 2 関数名の変更
+	void Attack(Hero* hero);              // ダメージの修正
+	int GetStatus(int status);            // 関数名の変更   // return case:Name の修正
+	void SetHp(int changeInHp);           // 関数名の変更
 
 private:
-	int NameShow();                       // 3 case:Nameで呼ばれる関数の追加
+	int NameShow();                       // case:Nameで呼ばれる関数の追加
 
 private:
 	const char* name;
@@ -41,16 +41,16 @@ class Hero
 public:
 	Hero();
 	~Hero();
-	void Attack(Enemy* enemy);           // 1 ダメージの修正
+	void Attack(Enemy* enemy);           // ダメージの修正
 	void Heal();
-	int GetStatus(int status);           // 2 関数名の変更 // 3 return case:Name の修正
-	void SetHp(int changeInHp);          // 2 関数名の変更
+	int GetStatus(int status);           // 関数名の変更 // return case:Name の修正
+	void SetHp(int changeInHp);          // 関数名の変更
 	int InputKey();
 
 
 private:
 	void InputName();
-	int ShowName();                      // 3 case:Nameで呼ばれる関数の追加
+	int ShowName();                      // case:Nameで呼ばれる関数の追加
 
 
 private:
@@ -75,11 +75,11 @@ Enemy::Enemy()
 
 void Enemy::Attack(Hero* hero)
 {
-	int damage = hero->GetStatus(Def) - atk;        //1 ダメージ変数の追加
+	int damage = hero->GetStatus(Def) - atk;        // ダメージ変数の追加
 
-	if (damage > 0)                                 //1 修正
+	if (damage > 0)                                 // 修正
 	{
-		damage = 0;                                 //1 damageがマイナスの値でなければ0を入れる
+		damage = 0;                                 // damageがマイナスの値でなければ0を入れる
 	}
 
 	cout << name << "の攻撃" << endl;
@@ -106,7 +106,7 @@ int Enemy::GetStatus(int status)
 		break;
 
 	case Name:
-		NameShow();                     //3 関数の追加
+		NameShow();                     // 関数の追加
 		break;
 
 	default:
@@ -119,7 +119,7 @@ void Enemy::SetHp(int changeInHp)
 	hp += changeInHp;
 }
 
-int Enemy::NameShow()                   //3 GetStatusで呼ぶ関数の追加
+int Enemy::NameShow()                   // GetStatusで呼ぶ関数の追加
 {
 	cout << name;
 	return 0;
@@ -146,11 +146,11 @@ Hero::Hero()
 
 void Hero::Attack(Enemy* enemy)
 {
-	int damage = enemy->GetStatus(Def) - atk;          //1 ダメージ変数の追加
+	int damage = enemy->GetStatus(Def) - atk;          // ダメージ変数の追加
 
-	if (damage > 0)                                    //1 修正
+	if (damage > 0)                                    // 修正
 	{
-		damage = 0;                                    //1 damageがマイナスの値でなければ0を入れる
+		damage = 0;                                    // damageがマイナスの値でなければ0を入れる
 	}
 
 	cout << name << "の攻撃" << endl;
@@ -186,7 +186,7 @@ int Hero::GetStatus(int status)
 		break;
 
 	case Name:
-		ShowName();                   //3 関数の追加
+		ShowName();                   // 関数の追加
 		break;
 
 	default:
@@ -199,7 +199,7 @@ void Hero::SetHp(const int changeInHp)
 	hp += changeInHp;
 }
 
-int Hero::ShowName()                                 //3 GetStatusで呼ぶ関数の追加
+int Hero::ShowName()                                 // GetStatusで呼ぶ関数の追加
 {
 	cout << name;
 	return 0;
@@ -213,10 +213,10 @@ void Hero::InputName()
 	cout << "名前を入力してください > " << flush;
 	cin >> inputName;
 
-	int size = strlen(inputName);                //4 strlenの使用に変更
+	int size = strlen(inputName);                // strlenの使用に変更
 	name = new char[size + 1];
 
-	strcpy(name, inputName);                     //4 strcpyの使用に変更
+	strcpy(name, inputName);                     // strcpyの使用に変更
 
 	cout << "あなたの名前は " << name << " です。" << endl;
 }
@@ -234,8 +234,8 @@ int Hero::InputKey()
 
 Hero::~Hero()
 {
-	delete[] name;      //5 解放はnewでとった値を解放するだけでポインタをdeleteするわけではないから先に開放を行う。
-	*name = NULL;       //5 修正
+	delete[] name;      // 解放はnewでとった値を解放するだけでポインタをdeleteするわけではないから先に開放を行う。
+	*name = NULL;       // 修正
 };
 
 
